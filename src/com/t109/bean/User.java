@@ -1,4 +1,4 @@
-package com.t109.pojo;
+package com.t109.bean;
 
 public class User {
 	private int id;

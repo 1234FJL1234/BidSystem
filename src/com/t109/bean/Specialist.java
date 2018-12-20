@@ -1,4 +1,4 @@
-package com.t109.pojo;
+package com.t109.bean;
 
 public class Specialist {
 	private int id;// 主键，自增 long
