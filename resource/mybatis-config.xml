@@ -8,6 +8,6 @@
 	</settings>
 	
 	<typeAliases>
-		<package name="com.bidsystem.pojo"/>
+		<package name="com.bidsystem.bean"/>
 	</typeAliases>
 </configuration>
