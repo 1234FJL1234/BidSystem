@@ -1,4 +1,4 @@
-package com.t109.bean;
+package com.bidsystem.bean;
 
 public class Relation {
 	private int id;

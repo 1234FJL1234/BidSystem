@@ -1,4 +1,4 @@
-package com.t109.bean;
+package com.bidsystem.bean;
 
 public class Specialist {
 	private int id;// 主键，自增 long
