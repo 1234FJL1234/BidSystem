@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace = "com.bidsystem.dao.IProjectMapper">
+<!--   <resultMap type="Relation" id="listRelation">
+  	<id property="id" column="id"/>
+  	<result property="projectId" column="projectId"/>
+  	<result property="identityCard" column="identityCard"/>
+  </resultMap> -->
+   <select id="selectByPro" resultType="Specialist">
+  	SELECT * FROM specialist WHERE id IN(SELECT specialistId FROM relation WHERE projectId = 1)
+  </select>
+  </mapper>
