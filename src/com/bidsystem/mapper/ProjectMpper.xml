@@ -11,4 +11,8 @@
    <select id="selectByPro" resultType="Specialist">
   	SELECT * FROM specialist WHERE id IN(SELECT specialistId FROM relation WHERE projectId = 1)
   </select>
+  
+  <select id="listProject" resultType="Project">
+  	SELECT * FROM project WHERE id IN(SELECT projectId FROM relation WHERE specialistId = 1)
+  </select>
   </mapper>
