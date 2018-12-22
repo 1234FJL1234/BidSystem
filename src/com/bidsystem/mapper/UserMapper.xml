@@ -8,4 +8,8 @@
   		SELECT * FROM `user` WHERE userName = #{userName} AND userpwd=#{userpwd}
   	</select>
   
+  <!-- 用户登陆之后可自行修改密码 -->
+  	<update id="updatePwd" parameterType="User">
+  		update `user` set userpwd=#{userpwd} where id= #{id}
+  	</update>
   </mapper>
