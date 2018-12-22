@@ -36,12 +36,12 @@
     	<context:component-scan base-package="com.bidsystem.service"></context:component-scan>
     <!-- 配置事务 -->
     <!--定义事务管理器 -->
-    	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <!-- 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
     		<property name="dataSource" ref="dataSource"></property>
-    	</bean>
+    	</bean> -->
     <!-- 开启注解声明事务 -->
-    	<tx:annotation-driven transaction-manager="txManager"/>
+    <!-- 	<tx:annotation-driven transaction-manager="txManager"/> -->
     <!-- aop开启 -->
-    	<!-- <bean class="com.bidsystem.aop.UserLogger"></bean>
-    	<aop:aspectj-autoproxy></aop:aspectj-autoproxy> -->
+    	 <!-- <bean class="com.bidsystem.aop.UserLogger"></bean>
+    	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>  -->
 </beans>
