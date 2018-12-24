@@ -20,4 +20,16 @@ public class ProjectServiceImpl implements IProjectService {
 	public List<Project> listProject(Integer id) {
 		return pd.listProject(id);
 	}
+
+
+	@Override
+	public List<Project> getById(String[] ids) {
+		return pd.getById(ids);
+	}
+
+
+	@Override
+	public List<Project> getAll() {
+		return pd.getAll();
+	}
 }

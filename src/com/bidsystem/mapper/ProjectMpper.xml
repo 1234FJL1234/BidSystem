@@ -11,4 +11,17 @@
   <select id="listProject" resultType="Project">
   	SELECT * FROM project WHERE id IN(SELECT projectId FROM relation WHERE specialistId = 1)
   </select>
+  
+  <!-- 导出 -->
+	<select id="getAll" resultType="Project">
+		select * from project
+	</select>
+
+	<!-- 导出选中 -->
+	<select id="getById" resultType="Project">
+		select * from project where id in
+		<foreach collection="array" item="id" separator="," open="(" close=")">
+			#{id}
+		</foreach>
+	</select>
   </mapper>

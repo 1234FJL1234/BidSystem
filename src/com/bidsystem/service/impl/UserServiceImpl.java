@@ -12,7 +12,6 @@ import com.bidsystem.dao.IUserMapper;
 import com.bidsystem.service.IUserService;
 import com.bidsystem.util.Val;
 
-
 @Service
 public class UserServiceImpl implements IUserService {
 	@Autowired
@@ -34,20 +33,20 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public List<User> findByAddress(User user,HttpSession session) {
-		User user2 = (User)session.getAttribute(Val.SESSION_KEY_USER);
-		System.out.println("==============="+user2.getUserName());
-		if(user2.getUserName().equals("admin")) {
+	public List<User> findByAddress(User user, HttpSession session) {
+		User user2 = (User) session.getAttribute(Val.SESSION_KEY_USER);
+		System.out.println("===============" + user2.getUserName());
+		if (user2.getUserName().equals("admin")) {
 			user.setAddress("");
 			user.setId(user2.getId());
-		}else {
+		} else {
 			user.setAddress(user2.getAddress());
 			user.setId(user2.getId());
 		}
 		return userMapper.findByAddress(user);
 	}
 
-		// 更新用户信息
+	// 更新用户信息
 	@Override
 	public int update(int id, String userName, String userpwd, String workUnit, String address) {
 		return userMapper.update(id, userName, userpwd, workUnit, address);
@@ -59,6 +58,16 @@ public class UserServiceImpl implements IUserService {
 		return userMapper.findById(id);
 	}
 
+	// 导出选中
+	@Override
+	public List<User> getById(String[] ids) {
+		return userMapper.getById(ids);
+	}
 
+	// 导出
+	@Override
+	public List<User> getAll() {
+		return userMapper.getAll();
+	}
 
 }

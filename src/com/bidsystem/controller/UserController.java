@@ -1,7 +1,6 @@
 package com.bidsystem.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,87 +17,87 @@ import com.bidsystem.service.IUserService;
 import com.bidsystem.util.Val;
 import com.mysql.jdbc.StringUtils;
 
-
 @Controller
 @RequestMapping("user")
 public class UserController {
-	
+
 	@Autowired
 	private IUserService us;
-	
+
 	// 映射到登陆
 	@RequestMapping("login")
 	public String login() {
 		return "login";
 	}
-	
-	
+
 	/**
 	 * 处理登录请求
+	 * 
 	 * @param userName
 	 * @param userpwd
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("dologin")
-	public String login(String userName,String userpwd,HttpSession session) {
+	public String login(String userName, String userpwd, HttpSession session) {
 		User user = us.login(userName, userpwd);
 		System.out.println(user);
-		if(user!=null) {
-			session.setAttribute(Val.SESSION_KEY_USER,user);
+		if (user != null) {
+			session.setAttribute(Val.SESSION_KEY_USER, user);
 			return "show";
-		}else {
+		} else {
 			return "login";
 		}
 	}
-	
-	//映射修改密码
+
+	// 映射修改密码
 	@RequestMapping("updatepwd")
-	public String updatepwd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public String updatepwd(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		return "pwdmodify";
 	}
-	
-	
-	//处理用户登陆之后可自行修改密码
+
+	// 处理用户登陆之后可自行修改密码
 	@RequestMapping("pwdmodify")
-	public String updatePwd(HttpServletRequest request, HttpServletResponse response,HttpSession session) throws ServletException, IOException {
-		User o= (User)request.getSession().getAttribute(Val.SESSION_KEY_USER);
+	public String updatePwd(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+			throws ServletException, IOException {
+		User o = (User) request.getSession().getAttribute(Val.SESSION_KEY_USER);
 		String newpassword = request.getParameter("newpassword");
 		boolean flag = false;
-		if(o != null && !StringUtils.isNullOrEmpty(newpassword)){
-			flag = us.updatePwd(o.getId(),newpassword);
-			if(flag){
+		if (o != null && !StringUtils.isNullOrEmpty(newpassword)) {
+			flag = us.updatePwd(o.getId(), newpassword);
+			if (flag) {
 				request.setAttribute(Val.SYS_MESSAGE, "修改密码成功,请退出并使用新密码重新登录！");
-				request.getSession().removeAttribute(Val.SESSION_KEY_USER);//session注销
-			}else{
+				request.getSession().removeAttribute(Val.SESSION_KEY_USER);// session注销
+			} else {
 				request.setAttribute(Val.SYS_MESSAGE, "修改密码失败！");
 			}
-		}else{
+		} else {
 			request.setAttribute(Val.SYS_MESSAGE, "修改密码失败！");
 		}
-		
+
 		return "pwdmodify";
 	}
-	
+
 	@RequestMapping("finduser")
-	public String findByUser(User user,Model model,HttpSession session) {
-		model.addAttribute("listUser",us.findByAddress(user,session));
+	public String findByUser(User user, Model model, HttpSession session) {
+		model.addAttribute("listUser", us.findByAddress(user, session));
 		return "user";
 	}
-	
+
 	// 映射到修改页面
 	@RequestMapping("update")
-	public String update(Model model,int id) {
-		model.addAttribute("user",us.findById(id));
+	public String update(Model model, int id) {
+		model.addAttribute("user", us.findById(id));
 		return "update";
 	}
-	
+
 	// 处理修改请求
 	@RequestMapping("doupdate")
-	public String doupdate(int id,String userName,String userpwd,String workUnit,String address) {
+	public String doupdate(int id, String userName, String userpwd, String workUnit, String address) {
 		us.update(id, userName, userpwd, workUnit, address);
 		return "redirect:finduser";
-		
+
 	}
-	
+
 }

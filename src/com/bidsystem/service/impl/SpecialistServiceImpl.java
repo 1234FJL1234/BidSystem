@@ -28,5 +28,15 @@ public class SpecialistServiceImpl implements ISpecialistService{
 	public int updateSpecialist(Specialist specialist) {
 		return sm.updateSpecialist(specialist);
 	}
+
+	@Override
+	public List<Specialist> getById(String[] ids) {
+		return sm.getById(ids);
+	}
+
+	@Override
+	public List<Specialist> getAll() {
+		return sm.getAll();
+	}
 	
 }
