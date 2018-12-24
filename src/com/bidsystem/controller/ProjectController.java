@@ -12,7 +12,7 @@ import com.bidsystem.bean.Project;
 import com.bidsystem.service.IProjectService;
 
 @Controller
-@RequestMapping("spcialist")
+@RequestMapping("project")
 public class ProjectController {
 	
 	@Autowired
