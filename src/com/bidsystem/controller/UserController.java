@@ -1,6 +1,7 @@
 package com.bidsystem.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.bidsystem.bean.User;
@@ -18,10 +20,11 @@ import com.mysql.jdbc.StringUtils;
 
 
 @Controller
+@RequestMapping("user")
 public class UserController {
 	
 	@Autowired
-	private IUserService IUserService;
+	private IUserService us;
 	
 	// 映射到登陆
 	@RequestMapping("login")
@@ -39,11 +42,11 @@ public class UserController {
 	 */
 	@RequestMapping("dologin")
 	public String login(String userName,String userpwd,HttpSession session) {
-		User user = IUserService.login(userName, userpwd);
+		User user = us.login(userName, userpwd);
 		System.out.println(user);
 		if(user!=null) {
 			session.setAttribute(Val.SESSION_KEY_USER,user);
-			return "index";
+			return "show";
 		}else {
 			return "login";
 		}
@@ -63,7 +66,7 @@ public class UserController {
 		String newpassword = request.getParameter("newpassword");
 		boolean flag = false;
 		if(o != null && !StringUtils.isNullOrEmpty(newpassword)){
-			flag = IUserService.updatePwd(o.getId(),newpassword);
+			flag = us.updatePwd(o.getId(),newpassword);
 			if(flag){
 				request.setAttribute(Val.SYS_MESSAGE, "修改密码成功,请退出并使用新密码重新登录！");
 				request.getSession().removeAttribute(Val.SESSION_KEY_USER);//session注销
@@ -75,6 +78,27 @@ public class UserController {
 		}
 		
 		return "pwdmodify";
+	}
+	
+	@RequestMapping("finduser")
+	public String findByUser(User user,Model model,HttpSession session) {
+		model.addAttribute("listUser",us.findByAddress(user,session));
+		return "user";
+	}
+	
+	// 映射到修改页面
+	@RequestMapping("update")
+	public String update(Model model,int id) {
+		model.addAttribute("user",us.findById(id));
+		return "update";
+	}
+	
+	// 处理修改请求
+	@RequestMapping("doupdate")
+	public String doupdate(int id,String userName,String userpwd,String workUnit,String address) {
+		us.update(id, userName, userpwd, workUnit, address);
+		return "redirect:finduser";
+		
 	}
 	
 }
