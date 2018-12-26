@@ -38,5 +38,20 @@ public class SpecialistServiceImpl implements ISpecialistService{
 	public List<Specialist> getAll() {
 		return sm.getAll();
 	}
+
+	@Override
+	public List<Specialist> Listsele1() {
+		return sm.Listsele1();
+	}
+
+	@Override
+	public List<Specialist> Listselect(String type, String name) {
+		return sm.Listselect(type, name);
+	}
+
+	@Override
+	public int iddelete(int[] ids) {
+		return sm.iddelete(ids);
+	}
 	
 }

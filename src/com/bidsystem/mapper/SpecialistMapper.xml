@@ -5,10 +5,11 @@
 <mapper namespace="com.bidsystem.dao.ISpecialistMapper">
 	<!--更据项目查专家 -->
 	<select id="selectByPro" resultType="Specialist">
-		SELECT * FROM specialist WHERE id
+		SELECT * FROM specialist
+		WHERE id
 		IN(SELECT specialistId FROM relation WHERE projectId = 1)
 	</select>
-	
+
 	<!-- 导出 -->
 	<select id="getAll" resultType="Specialist">
 		select * from specialist
@@ -21,5 +22,38 @@
 			close=")">
 			#{id}
 		</foreach>
+	</select>
+
+	<!-- 条件查询 -->
+	<select id="Listselect" resultType="Specialist">
+		select * from specialist
+		where 1=1
+		<choose>
+			<when test="type == '专家姓名'">
+				and name like "%"#{name}"%"
+			</when>
+			<when test="type == '身份证'">
+				and identityCard like CONCAT ('%',#{name},'%')
+			</when>
+			<when test="type == '联系电话'">
+				and mobile like CONCAT ('%',#{name},'%')
+			</when>
+			<otherwise>
+				and 2=2
+			</otherwise>
+		</choose>
+	</select>
+	<!-- 删除 -->
+	<delete id="iddelete" parameterType="int">
+		delete from specialist
+		where id in
+		<foreach item="ids" collection="array" open="(" separator=","
+			close=")">
+			#{ids}
+		</foreach>
+
+	</delete>
+	<select id="Listsele1" resultType="Specialist">
+		select * from specialist
 	</select>
 </mapper>

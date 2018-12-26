@@ -22,4 +22,13 @@ public interface ISpecialistService {
 
 	// 导出所有
 	public List<Specialist> getAll();
+
+	// 显示所有
+	public List<Specialist> Listsele1();
+
+	// 根据姓名，身份证，号码模糊查询
+	public List<Specialist> Listselect(@Param("type") String type, @Param("name") String name);
+
+	// 删除
+	public int iddelete(int[] ids);
 }
