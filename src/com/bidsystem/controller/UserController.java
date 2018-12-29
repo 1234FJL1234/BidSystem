@@ -10,7 +10,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bidsystem.bean.User;
 import com.bidsystem.service.IUserService;
@@ -39,14 +41,17 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("dologin")
-	public String login(String userName, String userpwd, HttpSession session) {
-		User user = us.login(userName, userpwd);
+	@ResponseBody
+	public Object login(@RequestBody User user, HttpSession session) {
 		System.out.println(user);
-		if (user != null) {
-			session.setAttribute(Val.SESSION_KEY_USER, user);
-			return "show";
+		User user2 = us.login(user);
+		
+		
+		if (user2 != null) {
+			session.setAttribute(Val.SESSION_KEY_USER, user2);
+			return "{\"type\":\"2001\"}";
 		} else {
-			return "login";
+			return "{\"type\":\"2002\"}";
 		}
 	}
 
@@ -59,6 +64,7 @@ public class UserController {
 
 	// 处理用户登陆之后可自行修改密码
 	@RequestMapping("pwdmodify")
+	@ResponseBody
 	public String updatePwd(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 			throws ServletException, IOException {
 		User o = (User) request.getSession().getAttribute(Val.SESSION_KEY_USER);
@@ -69,35 +75,42 @@ public class UserController {
 			if (flag) {
 				request.setAttribute(Val.SYS_MESSAGE, "修改密码成功,请退出并使用新密码重新登录！");
 				request.getSession().removeAttribute(Val.SESSION_KEY_USER);// session注销
+				return "{\"type\":\"2001\"}";
 			} else {
 				request.setAttribute(Val.SYS_MESSAGE, "修改密码失败！");
+				return "{\"type\":\"2002\"}";
 			}
 		} else {
 			request.setAttribute(Val.SYS_MESSAGE, "修改密码失败！");
+			return "{\"type\":\"2002\"}";
 		}
-
-		return "pwdmodify";
 	}
 
 	@RequestMapping("finduser")
-	public String findByUser(User user, Model model, HttpSession session) {
+	@ResponseBody
+	public Object findByUser(User user, Model model, HttpSession session) {
 		model.addAttribute("listUser", us.findByAddress(user, session));
-		return "user";
+		return us.findByAddress(user, session);
 	}
 
 	// 映射到修改页面
 	@RequestMapping("update")
-	public String update(Model model, int id) {
+	@ResponseBody
+	public Object update(Model model, @RequestBody int id) {
 		model.addAttribute("user", us.findById(id));
-		return "update";
+		return us.findById(id);
 	}
 
 	// 处理修改请求
 	@RequestMapping("doupdate")
-	public String doupdate(int id, String userName, String userpwd, String workUnit, String address) {
-		us.update(id, userName, userpwd, workUnit, address);
-		return "redirect:finduser";
-
+	@ResponseBody
+	public String doupdate(@RequestBody int id,@RequestBody String userName,@RequestBody String userpwd,@RequestBody String workUnit, String address) {
+		int result = us.update(id, userName, userpwd, workUnit, address);
+		if (result >= 1) {
+			return "{\"type\":\"2001\"}";
+		} else {
+			return "{\"type\":\"2002\"}";
+		}
 	}
 
 }

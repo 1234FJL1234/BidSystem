@@ -9,7 +9,7 @@ import com.bidsystem.bean.Specialist;
 public interface ISpecialistService {
 
 	// 更据项目查专家
-	public List<Specialist> selectByPro(@Param("id") Integer id);
+	public List<Specialist> selectByPro(Specialist specialist);
 
 	// 新增专家
 	public int addSpecialist(Specialist specialist);

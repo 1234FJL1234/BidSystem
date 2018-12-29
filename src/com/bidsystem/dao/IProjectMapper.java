@@ -16,4 +16,14 @@ public interface IProjectMapper {
 
 	// 导出
 	public List<Project> getAll();
+
+	// 删除用户信息
+	public int deleteProject(int[] ids);
+
+	// 查询用户信息
+	public List<Project> listProject();
+
+	// 查询用户信息
+	public List<Project> listProjectByNum(@Param("projectNum") String projectNum,
+			@Param("projectName") String projectName);
 }

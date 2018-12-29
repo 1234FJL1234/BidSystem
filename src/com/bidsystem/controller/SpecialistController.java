@@ -7,34 +7,36 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bidsystem.bean.Specialist;
 import com.bidsystem.service.ISpecialistService;
 import com.bidsystem.util.ExcelWriter;
 
 @Controller
-@RequestMapping("spcialist")
+@RequestMapping("specialist")
 public class SpecialistController {
 
 	@Autowired
 	private ISpecialistService ss;
 
+	// 根据项目ID查询有多少专家投 
 	@RequestMapping("list")
-	public String listSpecialist(@Param(value = "id") Integer id, Model model) {
-		System.out.println("前台正在请求listSpecialist");
-		List<Specialist> list = ss.selectByPro(id);
+	@ResponseBody
+	public Object listSpecialist(@RequestBody Specialist specialist, Model model) {
+		List<Specialist> list = ss.selectByPro(specialist);
 		if (list != null) {
-			System.out.println("查询成功");
-			model.addAttribute("Specialist", list);
+			return list;
+		}else {
+			return "查询无结果";
 		}
-		return "listSpecialist";
 	}
 
 	// 导出选中
@@ -64,41 +66,37 @@ public class SpecialistController {
 		workbook.write(response.getOutputStream());
 	}
 
-	// 删除
-	@RequestMapping("deleteProject")
-	public String deleteProject(@RequestParam("ids") int[] ids, Model model) {
-		System.out.println("进入删除！");
-		System.out.println(ids[0]);
-		int rs = ss.iddelete(ids);
-		return "redirect:zhu";
-
-	}
-
-	// 主界面显示
-	@RequestMapping("zhu")
-	public String fun2(Model m) {
-		/* List<Specialist> l=sp.Listsele1(); */
-		List<Specialist> l = ss.Listsele1();
-		m.addAttribute("list", l);
-		return "zhu";
-	}
-
-	// 多条件查询
-	@RequestMapping("doselect")
-	public String fun3(Model m, @RequestParam("name") String name, @RequestParam("type") String type) {
-		System.out.println(name + "---------" + type);
-		List<Specialist> l = ss.Listselect(type, name);
-		for (Specialist a : l) {
-			System.out.println("dayin1");
-			System.out.println(a.getAddress());
+	// 删除专家
+	@RequestMapping("delete")
+	@ResponseBody
+	public String delete(@RequestBody int[] ids, Model model) {
+		int result = ss.iddelete(ids);
+		if (result >= 1) {
+			return "{\"type\":\"2001\"}";
+		} else {
+			return "{\"type\":\"2002\"}";
 		}
-		m.addAttribute("list", l);
-		return "zhu";
 	}
 
-	@RequestMapping("dozhu")
-	public String fun4() {
-		return "dozhu";
+	// 主界面显示（专家）
+	@RequestMapping("search")
+	@ResponseBody
+	public Object fun2(Model m,HttpServletRequest request) {
+		List<Specialist> list = ss.Listsele1();
+		m.addAttribute("list", list);
+		return list;
+	}
 
+	// 多条件查询（专家）
+	@RequestMapping("doselect")
+	@ResponseBody
+	public Object fun3(Model m, @RequestBody String name, @RequestBody String type,HttpServletRequest request) {
+		List<Specialist> list = ss.Listselect(type, name);
+		if (list == null) {
+			return "无查询结果";
+		} else {
+			m.addAttribute("list", list);
+			return list;
+		}
 	}
 }

@@ -15,8 +15,8 @@ public class SpecialistServiceImpl implements ISpecialistService{
 	private ISpecialistMapper sm;
 	
 	@Override
-	public List<Specialist> selectByPro(Integer id) {
-		return sm.selectByPro(id);
+	public List<Specialist> selectByPro(Specialist specialist) {
+		return sm.selectByPro(specialist.getId());
 	}
 
 	@Override

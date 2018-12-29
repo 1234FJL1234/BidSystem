@@ -17,8 +17,8 @@ public class ProjectServiceImpl implements IProjectService {
 
 
 	@Override
-	public List<Project> listProject(Integer id) {
-		return pd.listProject(id);
+	public List<Project> listProject(Project project) {
+		return pd.listProject(project.getId());
 	}
 
 
@@ -31,5 +31,22 @@ public class ProjectServiceImpl implements IProjectService {
 	@Override
 	public List<Project> getAll() {
 		return pd.getAll();
+	}
+
+	@Override
+	public int deleteProject(int[] ids) {
+		return pd.deleteProject(ids);
+	}
+
+
+	@Override
+	public List<Project> listProject() {
+		return pd.listProject();
+	}
+
+
+	@Override
+	public List<Project> listProjectByNum(Project project) {
+		return pd.listProjectByNum(project.getProjectNum(), project.getProjectName());
 	}
 }

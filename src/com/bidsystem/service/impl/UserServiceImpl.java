@@ -19,8 +19,8 @@ public class UserServiceImpl implements IUserService {
 
 	// 用户登陆
 	@Override
-	public User login(String userName, String userpwd) {
-		return userMapper.login(userName, userpwd);
+	public User login(User user) {
+		return userMapper.login(user.getUserName(), user.getUserpwd());
 	}
 
 	@Override

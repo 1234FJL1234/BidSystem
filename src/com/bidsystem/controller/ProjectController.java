@@ -12,7 +12,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bidsystem.bean.Project;
 import com.bidsystem.service.IProjectService;
@@ -25,15 +27,16 @@ public class ProjectController {
 	@Autowired
 	private IProjectService ps;
 
+	// 通过专家id查项目
 	@RequestMapping("listProject")
-	public String dolistProject(@Param("id") Integer id, Model model) {
-		System.out.println("前台正在请求listProject");
-		List<Project> list = ps.listProject(id);
+	@ResponseBody
+	public Object dolistProject(@RequestBody Project project, Model model) {
+		List<Project> list = ps.listProject(project);
 		if (list != null) {
-			System.out.println("查询成功");
-			model.addAttribute("project", list);
+			return list;
+		} else {
+			return "查询无结果";
 		}
-		return "listProject";
 	}
 
 	// 导出选中
@@ -61,5 +64,36 @@ public class ProjectController {
 		ExcelWriter<Project> ew = new ExcelWriter<>();
 		XSSFWorkbook workbook = ew.getWorkbook(ProjectList, "项目信息", Project.class);
 		workbook.write(response.getOutputStream());
+	}
+
+	@RequestMapping("listProjectByNum")
+	@ResponseBody
+	public Object listProjectByNum(@RequestBody Project project, String names, String selectType, Model model) {
+		System.out.println("类型" + selectType + "名字" + names);
+		if (selectType == null | selectType == " ") {
+			selectType = "-1";
+		} else if (selectType.equals("1")) {
+			project.setProjectNum(names);
+		} else if (selectType.equals("2")) {
+			project.setProjectName(names);
+		}
+		List<Project> list = ps.listProjectByNum(project);
+		System.out.println("========================" + list.size());
+		model.addAttribute("names", names);
+		model.addAttribute("selectType", selectType);
+		model.addAttribute("list", list);
+		return project;
+	}
+
+	@RequestMapping("deleteProject")
+	@ResponseBody
+	public String deleteProject(int[] ids, Model model) {
+		System.out.println("进入删除！");
+		int rs = ps.deleteProject(ids);
+		if (rs > 0) {
+			return "{\"type\":\"2001\"}";
+		}else {
+			return "{\"type\":\"2002\"}";
+		}
 	}
 }
